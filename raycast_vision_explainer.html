@@ -1,0 +1,181 @@
+
+<style>
+canvas { display:block; width:100%; border-radius: var(--border-radius-lg); cursor:crosshair; }
+.ctrl { display:flex; align-items:center; gap:14px; margin-top:10px; font-size:12px; color:var(--color-text-secondary); flex-wrap:wrap; }
+.ctrl label { display:flex; align-items:center; gap:6px; }
+.ctrl input[type=range] { width:90px; }
+</style>
+<canvas id="c" height="340"></canvas>
+<div class="ctrl">
+  <label>Rays <input type="range" id="rcount" min="12" max="120" value="48"> <span id="rlabel">48</span></label>
+  <label>Radius <input type="range" id="radius" min="60" max="160" value="110"> <span id="radiuslabel">110</span></label>
+  <label style="gap:5px"><input type="checkbox" id="showrays"> show rays</label>
+  <span style="margin-left:auto;color:var(--color-text-tertiary)">drag to move player</span>
+</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+
+const walls = [
+  {x:80,  y:60,  w:120, h:18},
+  {x:300, y:80,  w:18,  h:110},
+  {x:160, y:180, w:130, h:18},
+  {x:60,  y:230, w:18,  h:100},
+  {x:380, y:200, w:110, h:18},
+  {x:460, y:80,  w:18,  h:90},
+  {x:200, y:270, w:18,  h:70},
+  {x:340, y:260, w:100, h:18},
+  {x:520, y:150, w:18,  h:120},
+  {x:560, y:60,  w:80,  h:18},
+];
+
+let player = {x: 250, y: 190};
+let dragging = false;
+let rayCount = 48;
+let radius = 110;
+let showRays = false;
+
+function raySegIntersect(ox,oy,dx,dy, x1,y1,x2,y2) {
+  const ex=x2-x1, ey=y2-y1;
+  const denom = dx*ey - dy*ex;
+  if (Math.abs(denom)<1e-8) return null;
+  const t = ((x1-ox)*ey - (y1-oy)*ex) / denom;
+  const u = ((x1-ox)*dy - (y1-oy)*dx) / denom;
+  if (t>=0 && u>=0 && u<=1) return t;
+  return null;
+}
+
+function castRay(ox,oy,angle) {
+  const dx=Math.cos(angle), dy=Math.sin(angle);
+  let minT = radius;
+  for (const w of walls) {
+    const segs = [
+      [w.x,w.y,w.x+w.w,w.y],
+      [w.x+w.w,w.y,w.x+w.w,w.y+w.h],
+      [w.x+w.w,w.y+w.h,w.x,w.y+w.h],
+      [w.x,w.y+w.h,w.x,w.y],
+    ];
+    for (const [x1,y1,x2,y2] of segs) {
+      const t = raySegIntersect(ox,oy,dx,dy,x1,y1,x2,y2);
+      if (t!==null && t<minT) minT=t;
+    }
+  }
+  return {x:ox+dx*minT, y:oy+dy*minT, t:minT, hit:minT<radius};
+}
+
+function draw() {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const bg = isDark ? '#1a1a18' : '#e8e6e0';
+  const wallFill = isDark ? '#3a3836' : '#b0aea6';
+  const wallStroke = isDark ? '#555350' : '#888680';
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,W,H);
+
+  const pts = [];
+  for (let i=0;i<rayCount;i++) {
+    const angle = (i/rayCount)*Math.PI*2;
+    pts.push(castRay(player.x,player.y,angle));
+  }
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x,pts[0].y);
+  for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x,pts[i].y);
+  ctx.closePath();
+  const litFill = isDark ? 'rgba(255,220,140,0.13)' : 'rgba(255,220,80,0.22)';
+  ctx.fillStyle = litFill;
+  ctx.fill();
+  ctx.restore();
+
+  if (showRays) {
+    for (const p of pts) {
+      ctx.beginPath();
+      ctx.moveTo(player.x,player.y);
+      ctx.lineTo(p.x,p.y);
+      ctx.strokeStyle = p.hit ? (isDark?'rgba(255,100,80,0.45)':'rgba(200,60,40,0.4)') : (isDark?'rgba(255,220,100,0.25)':'rgba(200,160,0,0.25)');
+      ctx.lineWidth=0.8;
+      ctx.stroke();
+    }
+  }
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x,pts[0].y);
+  for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x,pts[i].y);
+  ctx.closePath();
+  ctx.strokeStyle = isDark ? 'rgba(255,210,100,0.6)' : 'rgba(180,130,0,0.5)';
+  ctx.lineWidth=1.5;
+  ctx.stroke();
+  ctx.restore();
+
+  for (const w of walls) {
+    ctx.fillStyle=wallFill;
+    ctx.strokeStyle=wallStroke;
+    ctx.lineWidth=0.5;
+    ctx.beginPath();
+    ctx.roundRect(w.x,w.y,w.w,w.h,3);
+    ctx.fill(); ctx.stroke();
+  }
+
+  ctx.beginPath();
+  ctx.arc(player.x,player.y,6,0,Math.PI*2);
+  ctx.fillStyle = isDark ? '#ffd080' : '#c08000';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(player.x,player.y,6,0,Math.PI*2);
+  ctx.strokeStyle = isDark ? '#fff8e0' : '#804000';
+  ctx.lineWidth=1.5;
+  ctx.stroke();
+
+  if (showRays) {
+    for (const p of pts) {
+      if (p.hit) {
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,3,0,Math.PI*2);
+        ctx.fillStyle=isDark?'rgba(255,100,80,0.8)':'rgba(200,60,40,0.7)';
+        ctx.fill();
+      }
+    }
+  }
+}
+
+function resize() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = 340;
+  draw();
+}
+
+document.getElementById('rcount').oninput = e => {
+  rayCount=+e.target.value;
+  document.getElementById('rlabel').textContent=rayCount;
+  draw();
+};
+document.getElementById('radius').oninput = e => {
+  radius=+e.target.value;
+  document.getElementById('radiuslabel').textContent=radius;
+  draw();
+};
+document.getElementById('showrays').onchange = e => {
+  showRays=e.target.checked; draw();
+};
+
+function getPos(e) {
+  const r=canvas.getBoundingClientRect();
+  const src=e.touches?e.touches[0]:e;
+  return {x:src.clientX-r.left, y:src.clientY-r.top};
+}
+canvas.addEventListener('mousedown', e=>{dragging=true; const p=getPos(e); player.x=p.x; player.y=p.y; draw();});
+canvas.addEventListener('mousemove', e=>{if(dragging){const p=getPos(e); player.x=p.x; player.y=p.y; draw();}});
+canvas.addEventListener('mouseup', ()=>dragging=false);
+canvas.addEventListener('touchstart', e=>{e.preventDefault(); dragging=true; const p=getPos(e); player.x=p.x; player.y=p.y; draw();},{passive:false});
+canvas.addEventListener('touchmove', e=>{e.preventDefault(); if(dragging){const p=getPos(e); player.x=p.x; player.y=p.y; draw();}},{passive:false});
+canvas.addEventListener('touchend', ()=>dragging=false);
+
+new ResizeObserver(resize).observe(canvas);
+resize();
+</script>

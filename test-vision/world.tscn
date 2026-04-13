@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bcb1idqwxdh10" path="res://character_body_3d.gd" id="1_f3sb7"]
 [ext_resource type="Texture2D" uid="uid://xdy3x8bqblra" path="res://icon.svg" id="2_fj7yv"]
+[ext_resource type="Shader" uid="uid://c5v3ewykjs0ct" path="res://world.gdshader" id="3_tlwt5"]
+[ext_resource type="Script" uid="uid://jg1hm2u5yy17" path="res://vision_overlay.gd" id="4_aqk2v"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fj7yv"]
 albedo_color = Color(1, 0, 0, 1)
@@ -12,6 +14,16 @@ albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
 albedo_texture = ExtResource("2_fj7yv")
+
+[sub_resource type="Environment" id="Environment_fj7yv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_036b0"]
+shader = ExtResource("3_tlwt5")
+shader_parameter/player_screen_pos = Vector2(0.5, 0.5)
+shader_parameter/vision_radius = 0.3
+shader_parameter/edge_softness = 0.08
+shader_parameter/darkness = 0.85
+shader_parameter/screen_size = Vector2(1920, 1080)
 
 [node name="Node3D" type="Node3D" unique_id=850355065]
 
@@ -39,3 +51,23 @@ surface_material_override/0 = SubResource("StandardMaterial3D_036b0")
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1507898452]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.662103, 2.6202068)
 top_level = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1262292462]
+environment = SubResource("Environment_fj7yv")
+
+[node name="ShaderLayer" type="CanvasLayer" parent="." unique_id=118150507]
+
+[node name="DarkShader" type="ColorRect" parent="ShaderLayer" unique_id=1055973535]
+material = SubResource("ShaderMaterial_036b0")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RaycastLayer" type="CanvasLayer" parent="." unique_id=779289705]
+
+[node name="VisionDrawer" type="Node2D" parent="RaycastLayer" unique_id=1775827036 node_paths=PackedStringArray("player", "shader_rect")]
+script = ExtResource("4_aqk2v")
+player = NodePath("../../CharacterBody3D")
+shader_rect = NodePath("../../ShaderLayer/DarkShader")
