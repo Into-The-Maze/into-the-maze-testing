@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://dkrdfepcxv0a7"]
+
+[ext_resource type="Script" uid="uid://bcb1idqwxdh10" path="res://character_body_3d.gd" id="1_f3sb7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fj7yv"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_aqk2v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+albedo_color = Color(1, 1, 0, 1)
+
+[node name="Node3D" type="Node3D" unique_id=850355065]
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=550948055]
+use_collision = true
+size = Vector3(100, 1, 100)
+
+[node name="Wall" type="CSGBox3D" parent="." unique_id=689090098]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+use_collision = true
+size = Vector3(1, 4, 1)
+material = SubResource("StandardMaterial3D_fj7yv")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1636822677]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.662103, 2.6202068)
+script = ExtResource("1_f3sb7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=521155170]
+shape = SubResource("CapsuleShape3D_tlwt5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=411819483]
+mesh = SubResource("CapsuleMesh_aqk2v")
+surface_material_override/0 = SubResource("StandardMaterial3D_036b0")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1507898452]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 10, 0)
