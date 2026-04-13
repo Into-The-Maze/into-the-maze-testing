@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dkrdfepcxv0a7"]
 
 [ext_resource type="Script" uid="uid://bcb1idqwxdh10" path="res://character_body_3d.gd" id="1_f3sb7"]
+[ext_resource type="Texture2D" uid="uid://xdy3x8bqblra" path="res://icon.svg" id="2_fj7yv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fj7yv"]
 albedo_color = Color(1, 0, 0, 1)
@@ -10,7 +11,7 @@ albedo_color = Color(1, 0, 0, 1)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_aqk2v"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
-albedo_color = Color(1, 1, 0, 1)
+albedo_texture = ExtResource("2_fj7yv")
 
 [node name="Node3D" type="Node3D" unique_id=850355065]
 
@@ -36,4 +37,5 @@ mesh = SubResource("CapsuleMesh_aqk2v")
 surface_material_override/0 = SubResource("StandardMaterial3D_036b0")
 
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1507898452]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 10, 0)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.662103, 2.6202068)
+top_level = true
