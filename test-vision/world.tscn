@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bcb1idqwxdh10" path="res://character_body_3d.gd" id="1_f3sb7"]
 [ext_resource type="Texture2D" uid="uid://xdy3x8bqblra" path="res://icon.svg" id="2_fj7yv"]
+[ext_resource type="Script" uid="uid://c5rvjqneyhw35" path="res://vision_mask.gd" id="3_vmask"]
+[ext_resource type="Script" uid="uid://c6vx4ma8hky3r" path="res://vision_manager.gd" id="4_vmgr"]
+[ext_resource type="Shader" uid="uid://cx5cuubsofodc" path="res://world_vision.gdshader" id="5_wshad"]
+[ext_resource type="Shader" uid="uid://cx43r3l5k3esd" path="res://entity_vision.gdshader" id="6_eshad"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fj7yv"]
 albedo_color = Color(1, 0, 0, 1)
@@ -15,32 +19,89 @@ albedo_texture = ExtResource("2_fj7yv")
 
 [sub_resource type="Environment" id="Environment_fj7yv"]
 
-[node name="Node3D" type="Node3D" unique_id=850355065]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_entity"]
+render_priority = 0
+shader = ExtResource("6_eshad")
+shader_parameter/albedo = Color(0.2, 0.85, 1, 1)
+shader_parameter/use_texture = false
+shader_parameter/edge0 = 0.3
+shader_parameter/edge1 = 0.7
+shader_parameter/mask_softness = 0.004
 
-[node name="Floor" type="CSGBox3D" parent="." unique_id=550948055]
+[sub_resource type="BoxMesh" id="BoxMesh_entity"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_world"]
+shader = ExtResource("5_wshad")
+shader_parameter/outside_saturation = 0.0
+shader_parameter/outside_brightness = 0.55
+shader_parameter/outside_tint = Color(0.7, 0.75, 0.85, 1)
+shader_parameter/edge0 = 0.3
+shader_parameter/edge1 = 0.7
+shader_parameter/mask_softness = 0.004
+
+[node name="Node3D" type="Node3D" unique_id=1190999130]
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=1091732382]
 use_collision = true
 size = Vector3(100, 1, 100)
 
-[node name="Wall" type="CSGBox3D" parent="." unique_id=689090098]
+[node name="Wall" type="CSGBox3D" parent="." unique_id=236738976]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
 use_collision = true
 size = Vector3(1, 8, 1)
 material = SubResource("StandardMaterial3D_fj7yv")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1636822677]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=320619699]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.662103, 2.6202068)
 script = ExtResource("1_f3sb7")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=521155170]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=676938093]
 shape = SubResource("CapsuleShape3D_tlwt5")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=411819483]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=1129086674]
 mesh = SubResource("CapsuleMesh_aqk2v")
 surface_material_override/0 = SubResource("StandardMaterial3D_036b0")
 
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1507898452]
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=1990222654]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.662103, 2.6202068)
 top_level = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1262292462]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2102582737]
 environment = SubResource("Environment_fj7yv")
+
+[node name="TestEntity" type="MeshInstance3D" parent="." unique_id=1504506613 groups=["vision_entity"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, -3)
+material_override = SubResource("ShaderMaterial_entity")
+mesh = SubResource("BoxMesh_entity")
+
+[node name="TestEntity2" type="MeshInstance3D" parent="." unique_id=544030701 groups=["vision_entity"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, -2)
+material_override = SubResource("ShaderMaterial_entity")
+mesh = SubResource("BoxMesh_entity")
+
+[node name="VisionMaskViewport" type="SubViewport" parent="." unique_id=715903846]
+disable_3d = true
+handle_input_locally = false
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="VisionPolygon" type="Node2D" parent="VisionMaskViewport" unique_id=521835070 node_paths=PackedStringArray("player", "camera")]
+script = ExtResource("3_vmask")
+player = NodePath("../../CharacterBody3D")
+camera = NodePath("../../CharacterBody3D/Camera3D")
+
+[node name="VisionOverlay" type="CanvasLayer" parent="." unique_id=2027944485]
+
+[node name="WorldPost" type="ColorRect" parent="VisionOverlay" unique_id=909316120]
+material = SubResource("ShaderMaterial_world")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VisionManager" type="Node" parent="." unique_id=1235837229 node_paths=PackedStringArray("mask_viewport", "world_post")]
+script = ExtResource("4_vmgr")
+mask_viewport = NodePath("../VisionMaskViewport")
+world_post = NodePath("../VisionOverlay/WorldPost")
