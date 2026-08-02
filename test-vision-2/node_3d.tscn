@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://dutvgwpeiq784"]
+
+[ext_resource type="Script" uid="uid://bs4dlvhe038kc" path="res://character_body_3d.gd" id="1_a202f"]
+[ext_resource type="PackedScene" uid="uid://b2a40osrlb4p1" path="res://lib/lib_Vision/Vision.tscn" id="2_noarx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_umdtr"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ioqbr"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_umdtr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_noarx"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_umdtr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ioqbr"]
+albedo_color = Color(0, 1, 1, 1)
+
+[node name="Node3D" type="Node3D" unique_id=1265697736]
+
+[node name="floor" type="CSGBox3D" parent="." unique_id=1038007745]
+use_collision = true
+size = Vector3(100, 0.1, 100)
+
+[node name="wall" type="CSGBox3D" parent="." unique_id=216112692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+use_collision = true
+size = Vector3(1, 10, 1)
+material = SubResource("StandardMaterial3D_umdtr")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=2016782887]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.193894, 5.192012)
+script = ExtResource("1_a202f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1684660330]
+shape = SubResource("CapsuleShape3D_ioqbr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=1499038975]
+mesh = SubResource("CapsuleMesh_umdtr")
+surface_material_override/0 = SubResource("StandardMaterial3D_noarx")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=209681712]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 13, 5.192)
+top_level = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=285213395]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4792385, 0.52194333, 2.2545376)
+mesh = SubResource("BoxMesh_umdtr")
+surface_material_override/0 = SubResource("StandardMaterial3D_ioqbr")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1074628805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4792385, 0.52194333, -6.6942644)
+mesh = SubResource("BoxMesh_umdtr")
+surface_material_override/0 = SubResource("StandardMaterial3D_ioqbr")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=456468032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.465605, 0.52194333, -1.9301662)
+mesh = SubResource("BoxMesh_umdtr")
+surface_material_override/0 = SubResource("StandardMaterial3D_ioqbr")
+
+[node name="VISION" parent="." unique_id=1546010021 node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_noarx")]
+player = NodePath("../CharacterBody3D")
+camera = NodePath("../CharacterBody3D/Camera3D")

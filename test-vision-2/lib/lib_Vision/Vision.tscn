@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://b2a40osrlb4p1"]
+
+[ext_resource type="Script" uid="uid://d3i1llvfmq4f3" path="res://lib/lib_Vision/Vision.gd" id="1_7jid2"]
+[ext_resource type="Script" uid="uid://xq7hgeh8qhdu" path="res://lib/lib_Vision/vision_mask.gd" id="2_vfrxe"]
+[ext_resource type="Shader" uid="uid://bderosqjgad35" path="res://lib/lib_Vision/vision_shader.gdshader" id="3_lk3a0"]
+[ext_resource type="Script" uid="uid://skbsvivur14r" path="res://lib/lib_Vision/vision_manager.gd" id="4_4k4jv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ikm0v"]
+shader = ExtResource("3_lk3a0")
+shader_parameter/outside_saturation = 0.0
+shader_parameter/outside_brightness = 0.55
+shader_parameter/outside_tint = Color(0.7, 0.75, 0.85, 1)
+shader_parameter/edge0 = 0.3
+shader_parameter/edge1 = 0.7
+shader_parameter/mask_softness = 0.004
+
+[node name="Vision" type="Node" unique_id=1546010021]
+script = ExtResource("1_7jid2")
+
+[node name="Mask" type="SubViewport" parent="." unique_id=162788655]
+disable_3d = true
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="Polygon" type="Node2D" parent="Mask" unique_id=1889081030]
+script = ExtResource("2_vfrxe")
+fov_degrees = null
+vision_radius = null
+near_radius = null
+cone_rays = null
+circle_rays = null
+occluders_mask = null
+occlusion_enabled = null
+
+[node name="Overlay" type="CanvasLayer" parent="." unique_id=1591263869]
+
+[node name="World" type="ColorRect" parent="Overlay" unique_id=1691499858]
+material = SubResource("ShaderMaterial_ikm0v")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Manager" type="Node" parent="." unique_id=901643814 node_paths=PackedStringArray("mask", "world")]
+script = ExtResource("4_4k4jv")
+mask = NodePath("../Mask")
+world = NodePath("../Overlay/World")
