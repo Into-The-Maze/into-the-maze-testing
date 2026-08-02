@@ -13,4 +13,6 @@ func register_entity(node: Node) -> void:
 	manager.register_entity(node)
 
 func _ready() -> void:
+	if !player: push_warning("player not assigned in Vision")
+	if !camera: push_warning("camera not assigned in Vision")
 	instances = self

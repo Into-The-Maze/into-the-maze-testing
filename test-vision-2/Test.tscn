@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dutvgwpeiq784"]
 
-[ext_resource type="Script" uid="uid://bs4dlvhe038kc" path="res://character_body_3d.gd" id="1_a202f"]
-[ext_resource type="PackedScene" uid="uid://b2a40osrlb4p1" path="res://lib/lib_Vision/Vision.tscn" id="2_noarx"]
+[ext_resource type="Script" uid="uid://bs4dlvhe038kc" path="res://character_body_3d.gd" id="1_njov2"]
+[ext_resource type="PackedScene" uid="uid://b2a40osrlb4p1" path="res://lib/lib_Vision/Vision.tscn" id="2_2au82"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_umdtr"]
 albedo_color = Color(1, 0, 0, 1)
@@ -18,21 +18,33 @@ albedo_color = Color(0, 0, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ioqbr"]
 albedo_color = Color(0, 1, 1, 1)
 
-[node name="Node3D" type="Node3D" unique_id=1265697736]
+[node name="Test" type="Node3D" unique_id=1265697736]
 
-[node name="floor" type="CSGBox3D" parent="." unique_id=1038007745]
+[node name="Floor" type="CSGBox3D" parent="." unique_id=1038007745]
 use_collision = true
 size = Vector3(100, 0.1, 100)
 
-[node name="wall" type="CSGBox3D" parent="." unique_id=216112692]
+[node name="Wall" type="CSGBox3D" parent="." unique_id=216112692]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+use_collision = true
+size = Vector3(1, 10, 1)
+material = SubResource("StandardMaterial3D_umdtr")
+
+[node name="Wall2" type="CSGBox3D" parent="." unique_id=526098912]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 9.8477745, 8.733244, 5, 0)
+use_collision = true
+size = Vector3(1, 10, 1)
+material = SubResource("StandardMaterial3D_umdtr")
+
+[node name="Wall3" type="CSGBox3D" parent="." unique_id=62027115]
+transform = Transform3D(-0.0072066598, 0, -15.495139, 0, 1, 0, -0.999974, 0, 0.1116711, 15.973948, 5.0022144, -4.7746162)
 use_collision = true
 size = Vector3(1, 10, 1)
 material = SubResource("StandardMaterial3D_umdtr")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=2016782887]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.193894, 5.192012)
-script = ExtResource("1_a202f")
+script = ExtResource("1_njov2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1684660330]
 shape = SubResource("CapsuleShape3D_ioqbr")
@@ -60,6 +72,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.465605, 0.52194333, -1.93
 mesh = SubResource("BoxMesh_umdtr")
 surface_material_override/0 = SubResource("StandardMaterial3D_ioqbr")
 
-[node name="VISION" parent="." unique_id=1546010021 node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_noarx")]
+[node name="Vision" parent="." unique_id=1546010021 node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_2au82")]
 player = NodePath("../CharacterBody3D")
 camera = NodePath("../CharacterBody3D/Camera3D")
