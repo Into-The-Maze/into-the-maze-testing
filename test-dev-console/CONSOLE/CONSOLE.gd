@@ -19,9 +19,11 @@ const COMMAND_HELP := {
 }
 
 ### API ###
+# Register an entity to the dcall system, allowing its functions to be called in the console. Register on ready()
 func register(key: String, instance: Object) -> void:
 	entities[key] = instance
 
+# Unregister an entity from the dcall system. You MUST do this on _exit_tree(), else the console will preserve a dead reference.
 func unregister(key: String) -> void:
 	if entities.has(key):
 		entities.erase(key)
