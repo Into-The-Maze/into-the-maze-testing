@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://fiymk0q17hmt"]
+
+[ext_resource type="Script" uid="uid://cqk311kqs0x3q" path="res://diddy.gd" id="1_f3sb7"]
+
+[node name="World" type="Node2D" unique_id=1565892684]
+
+[node name="Diddy" type="CharacterBody2D" parent="." unique_id=2024900728]
+script = ExtResource("1_f3sb7")

@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://c0642nlap2haj"]
+
+[ext_resource type="Script" uid="uid://d0fi28cgkw22v" path="res://CONSOLE/CONSOLE.gd" id="1_02jya"]
+[ext_resource type="Theme" uid="uid://27mkwj627jry" path="res://CONSOLE/theme_console.tres" id="2_pc5we"]
+
+[node name="CONSOLE" type="Node" unique_id=2134599738]
+script = ExtResource("1_02jya")
+
+[node name="Container" type="PanelContainer" parent="." unique_id=2033461259]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_pc5we")
+
+[node name="V" type="VBoxContainer" parent="Container" unique_id=190755976]
+layout_mode = 2
+alignment = 2
+
+[node name="History" type="RichTextLabel" parent="Container/V" unique_id=733591115]
+texture_filter = 1
+layout_mode = 2
+size_flags_vertical = 3
+scroll_following = true
+shortcut_keys_enabled = false
+vertical_alignment = 2
+
+[node name="Input" type="LineEdit" parent="Container/V" unique_id=1376071871]
+texture_filter = 1
+layout_mode = 2
+keep_editing_on_text_submit = true
+emoji_menu_enabled = false
+middle_mouse_paste_enabled = false
+drag_and_drop_selection_enabled = false
+draw_control_chars = true
+virtual_keyboard_enabled = false
+caret_force_displayed = true
+
+[connection signal="gui_input" from="Container/V/Input" to="." method="_on_input_gui_input"]
+[connection signal="text_submitted" from="Container/V/Input" to="." method="_on_input_text_submitted"]
