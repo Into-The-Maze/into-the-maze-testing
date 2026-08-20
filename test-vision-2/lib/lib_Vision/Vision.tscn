@@ -24,11 +24,7 @@ render_target_update_mode = 4
 
 [node name="Polygon" type="Node2D" parent="Mask" unique_id=1889081030]
 script = ExtResource("2_vfrxe")
-fov_degrees = null
-vision_radius = null
-near_radius = null
-cone_rays = null
-circle_rays = null
+vision_radius = 20.0
 occluders_mask = null
 occlusion_enabled = null
 
