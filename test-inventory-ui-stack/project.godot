@@ -14,6 +14,14 @@ config/name="test-inventory-ui-stack"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+ITEM_DEFINITION_REGISTRY="*uid://yplq50ey5q1d"
+
+[debug]
+
+gdscript/warnings/unused_signal=0
+
 [display]
 
 window/stretch/mode="canvas_items"

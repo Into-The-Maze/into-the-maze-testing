@@ -5,6 +5,7 @@ const DEFINITION_PATH = "res://item/definition"
 # StringName -> ItemDefinition
 var _definitions: Dictionary = {}
 
+### API ###
 func get_definition(id: StringName) -> ItemDefinition:
 	if !_definitions.has(id):
 		#ERROR
@@ -17,6 +18,7 @@ func has_definition(id: StringName) -> bool:
 func get_all_ids() -> Array[StringName]:
 	return _definitions.keys()
 
+### Internal ###
 func _ready() -> void:
 	_load_all_definitions(DEFINITION_PATH)
 
