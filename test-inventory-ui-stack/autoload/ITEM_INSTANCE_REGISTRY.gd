@@ -1,9 +1,9 @@
 extends Node
 
-signal instance_created(instance: ItemInstance)
-signal instance_destroyed(instance_id: String)
+signal instance_created (instance: ItemInstance)
+signal instance_destroyed (instance_id: String)
 
-# String uuid -> ItemInstance
+# String id_unique -> ItemInstance
 var _instances: Dictionary = {}
 var _rng = RandomNumberGenerator.new()
 
@@ -61,4 +61,3 @@ func _generate_uuid() -> String:
 		hex.substr(16, 4),
 		hex.substr(20, 12),
 	]
-

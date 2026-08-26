@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 ITEM_DEFINITION_REGISTRY="*uid://yplq50ey5q1d"
+ITEM_INSTANCE_REGISTRY="*uid://dcfdimtm1jr75"
 
 [debug]
 
