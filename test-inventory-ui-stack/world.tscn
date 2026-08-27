@@ -1,3 +1,11 @@
 [gd_scene format=3 uid="uid://rve32ntdbihm"]
 
+[ext_resource type="PackedScene" uid="uid://chjlgabvg8wey" path="res://inventory/ui/ui_template.tscn" id="1_f3sb7"]
+
 [node name="World" type="Node3D" unique_id=2088165220]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1131358291]
+
+[node name="UiContainer" parent="CanvasLayer" unique_id=737268777 instance=ExtResource("1_f3sb7")]
+offset_right = 64.0
+offset_bottom = 64.0

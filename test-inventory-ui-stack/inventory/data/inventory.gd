@@ -47,7 +47,7 @@ func find_free_position(id_unique: String, rotated: bool = false) -> Vector2i:
 
 ### Edit ###
 func place_item(id_unique: String, top_left: Vector2i, rotated: bool = false) -> PlacementResult:
-	if not ItemInstanceRegistry.has_instance(id_unique):
+	if not ITEM_INSTANCE_REGISTRY.has_instance(id_unique):
 		return PlacementResult.BLOCKED
 
 	var drop := _classify_drop(id_unique, top_left, rotated)
