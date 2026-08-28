@@ -1,11 +1,39 @@
 [gd_scene format=3 uid="uid://rve32ntdbihm"]
 
-[ext_resource type="PackedScene" uid="uid://chjlgabvg8wey" path="res://inventory/ui/ui_template.tscn" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://c8f7y2nwsups6" path="res://char.gd" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://tyjtyfcvbn22" path="res://inventory/data/inventory.gd" id="2_fj7yv"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_umdtr"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_umdtr"]
+
+[sub_resource type="Environment" id="Environment_umdtr"]
 
 [node name="World" type="Node3D" unique_id=2088165220]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1131358291]
+[node name="Floor" type="CSGBox3D" parent="." unique_id=1845336468]
+use_collision = true
+size = Vector3(20, 0, 20)
 
-[node name="UiContainer" parent="CanvasLayer" unique_id=737268777 instance=ExtResource("1_f3sb7")]
-offset_right = 64.0
-offset_bottom = 64.0
+[node name="Char" type="CharacterBody3D" parent="." unique_id=654987133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+script = ExtResource("1_f3sb7")
+
+[node name="Mesh" type="MeshInstance3D" parent="Char" unique_id=1094433572]
+mesh = SubResource("CapsuleMesh_umdtr")
+
+[node name="Collider" type="CollisionShape3D" parent="Char" unique_id=1738328]
+shape = SubResource("CapsuleShape3D_umdtr")
+
+[node name="Inventory" type="Node" parent="Char" unique_id=673459977]
+script = ExtResource("2_fj7yv")
+metadata/_custom_type_script = "uid://tyjtyfcvbn22"
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1208918736]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 4, 5)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1329391447]
+environment = SubResource("Environment_umdtr")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1496040157]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 18.150745, 0)

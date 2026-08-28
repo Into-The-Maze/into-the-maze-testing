@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://byedkxoacvunj"]
+
+[ext_resource type="Script" uid="uid://csr825a74x50c" path="res://inventory/ui/item_container.gd" id="1_i460y"]
+
+[node name="ItemContainer" type="PanelContainer" unique_id=996374834]
+custom_minimum_size = Vector2(32, 32)
+mouse_filter = 2
+script = ExtResource("1_i460y")
+
+[node name="C" type="CenterContainer" parent="." unique_id=1071091988]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ItemTexture" type="TextureRect" parent="C" unique_id=909997480]
+texture_filter = 1
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Stack" type="Label" parent="." unique_id=972633216]
+visible = false
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 4
+text = "x/y"
+horizontal_alignment = 2
+vertical_alignment = 2
