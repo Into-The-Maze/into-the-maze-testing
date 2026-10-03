@@ -1,21 +1,26 @@
 extends PanelContainer
 class_name ItemContainer
 
+var texture
+var stack
+
 func _ready() -> void:
-	$C/Stack.visible = false
-	$C/Stack.text = ""
+	texture = $C/ItemTexture
+	stack = $Stack
 
 func update(id_unique: String):
-	var inst := ITEM_INSTANCE_REGISTRY.get_instance(id_unique)
-	var def := ITEM_DEFINITION_REGISTRY.get_definition(inst.id_def)
-	update_image(def)
-	update_stack(def, inst.quantity)
+	var inst = ITEM_INSTANCE_REGISTRY.get_instance(id_unique)
+	var def = ITEM_DEFINITION_REGISTRY.get_definition(inst.id_def)
+	set_image(def)
+	set_stack(inst, def)
 
-func update_image(def: ItemDefinition):
-	$C/ItemTexture.texture = def.item_2d
+func set_image(def: ItemDefinition):
+	texture.texture = def.item_2d
 
-func update_stack(def: ItemDefinition, current_stack: int):
-	if !def.is_stackable: $C/Stack.visible = false; $C/Stack.text = ""; return
-	$C/Stack.visible = true
-	$C/Stack.text = "%s/%s" % [str(current_stack), str(def.max_stack_size)]
-
+func set_stack(inst: ItemInstance, def: ItemDefinition):
+	if def.is_stackable:
+		stack.visible = true
+		stack.text = "%s/%s"%[inst.quantity,def.max_stack_size]
+	else:
+		stack.visible = false
+		stack.text = ""

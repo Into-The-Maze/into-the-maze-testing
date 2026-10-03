@@ -1,13 +1,14 @@
-[gd_scene format=3 uid="uid://cavj87nj02eft"]
+[gd_scene format=3 uid="uid://dcgbyl2bgkdpj"]
 
 [ext_resource type="Texture2D" uid="uid://dblpao7xflkaw" path="res://assets/ui/cell.png" id="1_04nin"]
-[ext_resource type="Script" uid="uid://b421t1yhiseb1" path="res://inventory/ui/inventory_grid.gd" id="2_frawo"]
+[ext_resource type="Script" uid="uid://dx6uubqct42hi" path="res://inventory/ui/inventory_grid.gd" id="2_frawo"]
 
 [node name="InventoryView" type="NinePatchRect" unique_id=1601652082]
 texture_filter = 1
 custom_minimum_size = Vector2(32, 32)
 offset_right = 32.0
 offset_bottom = 32.0
+mouse_filter = 0
 texture = ExtResource("1_04nin")
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1

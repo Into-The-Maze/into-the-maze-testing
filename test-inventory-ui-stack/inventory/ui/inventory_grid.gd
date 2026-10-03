@@ -9,6 +9,7 @@ var inventory: Inventory = null:
 		inventory = value
 		_bind()
 		custom_minimum_size = Vector2(inventory.grid_size) * CELL_SIZE
+		_rebuild_all_icons()
 		queue_redraw()
 
 # String id_unique -> ItemContainer icon
@@ -54,18 +55,34 @@ func _spawn_item_container(id_unique: String, entry: InventoryEntry) -> void:
 	icon.update(id_unique)
 
 ### Input ###
-func _gui_input(event: InputEvent) -> void:
-	if inventory == null: return
-	if event.is_action_pressed("Left Click"):
-		var cell := Vector2i(get_local_mouse_position() / CELL_SIZE)
-		if !UI_MANAGER.held_item_id == "":
-			var target_id := inventory.get_item_at(cell)
-			if target_id != "":
-				UI_MANAGER.try_take(inventory, target_id)
+func _get_drag_data(at_position: Vector2) -> Variant:
+	var cell := Vector2i(at_position / CELL_SIZE)
+	var id := inventory.get_item_at(cell)
+	if id == "": return null
 
-		else:
-			UI_MANAGER.try_place(inventory, cell)
+	var preview: ItemContainer = ITEM_CONTAINER.instantiate()
+	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
+	# Wrapper so the item is centred on the cursor instead of hanging off its corner
+	var wrapper := Control.new()
+	wrapper.add_child(preview)
+	set_drag_preview(wrapper)
+
+	preview.update(id)
+	preview.position = -preview.size / 2.0
+
+	return {"id": id, "from": inventory, "origin": cell}
+
+func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	if not (data is Dictionary and data.has("id")): return false
+	return UI_MANAGER.can_move(inventory, data.id, _drop_cell(at_position, data.id), UI_MANAGER.drag_rotated)
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+	UI_MANAGER.try_move(data.from, inventory, data.id, _drop_cell(at_position, data.id), UI_MANAGER.drag_rotated)
+
+func _drop_cell(at_position: Vector2, id_unique: String) -> Vector2i:
+	var footprint := inventory.get_footprint(id_unique, UI_MANAGER.drag_rotated)
+	return Vector2i((at_position / CELL_SIZE - Vector2(footprint) / 2.0).round())
 
 ### Internal ###
 func _bind():
@@ -82,4 +99,3 @@ func _unbind():
 		inventory.item_removed.disconnect(_on_item_removed)
 	if inventory.item_merged.is_connected(_on_item_merged):
 		inventory.item_merged.disconnect(_on_item_merged)
-

@@ -10,13 +10,11 @@ enum _Drop { FREE, MERGE, BLOCKED }
 
 const NO_POSITION := Vector2i(-1, -1)
 
-var _data := InventoryData.new()
+@export var _data := InventoryData.new()
 
-@export var grid_size: Vector2i = Vector2i(10, 10):
+var grid_size: Vector2i:
 	get:
 		return _data.grid_size
-	set(value):
-		_data.grid_size = value
 
 ### Queries ###
 func get_item_at(cell: Vector2i) -> String:
@@ -32,7 +30,7 @@ func can_place_at(id_unique: String, top_left: Vector2i, rotated: bool = false) 
 	return _classify_drop(id_unique, top_left, rotated).kind != _Drop.BLOCKED
 
 func find_free_position(id_unique: String, rotated: bool = false) -> Vector2i:
-	var footprint = _get_footprint(id_unique, rotated)
+	var footprint = get_footprint(id_unique, rotated)
 
 	if footprint == Vector2i.ZERO:
 		return NO_POSITION
@@ -73,11 +71,11 @@ func auto_insert_item(id_unique: String, rotated: bool = false) -> bool:
 	if not ITEM_INSTANCE_REGISTRY.has_instance(id_unique):
 		return false
 	var instance: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(id_unique)
-	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(instance.definition_id)
+	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(instance.id_def)
 	if definition == null:
 		return false
 
-	if definition.is_stackable_fungible:
+	if definition.is_stackable:
 		for existing_id in _data.placements.keys():
 			if instance.quantity <= 0:
 				break
@@ -101,7 +99,7 @@ func auto_insert_item(id_unique: String, rotated: bool = false) -> bool:
 ### Internal ###
 func _classify_drop(id_unique: String, top_left: Vector2i, rotated: bool) -> Dictionary:
 	var blocked := { "kind": _Drop.BLOCKED, "target": "" }
-	var footprint := _get_footprint(id_unique, rotated)
+	var footprint := get_footprint(id_unique, rotated)
 
 	if footprint == Vector2i.ZERO:
 		return blocked
@@ -136,17 +134,17 @@ func _can_merge(source_id: String, target_id: String) -> bool:
 	var target: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(target_id)
 	if source == null or target == null:
 		return false
-	if source.definition_id != target.definition_id:
+	if source.id_def != target.id_def:
 		return false
-	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(source.definition_id)
-	if definition == null or not definition.is_stackable_fungible:
+	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(source.id_def)
+	if definition == null or not definition.is_stackable:
 		return false
 	return target.quantity < definition.max_stack_size
 
 func _merge_into(source_id: String, target_id: String) -> PlacementResult:
 	var source: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(source_id)
 	var target: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(target_id)
-	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(source.definition_id)
+	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(source.id_def)
 	var moved: int = min(definition.max_stack_size - target.quantity, source.quantity)
 
 	if moved <= 0:
@@ -174,13 +172,13 @@ func _write_placement(id_unique: String, top_left: Vector2i, rotated: bool) -> v
 	item_placed.emit(id_unique, top_left, rotated)
 
 func _stamp_cells(id_unique: String, top_left: Vector2i, rotated: bool) -> void:
-	var footprint := _get_footprint(id_unique, rotated)
+	var footprint := get_footprint(id_unique, rotated)
 	for x in range(top_left.x, top_left.x + footprint.x):
 		for y in range(top_left.y, top_left.y + footprint.y):
 			_data.occupied_cells[Vector2i(x, y)] = id_unique
 
 func _clear_cells(id_unique: String, top_left: Vector2i, rotated: bool) -> void:
-	var footprint := _get_footprint(id_unique, rotated)
+	var footprint := get_footprint(id_unique, rotated)
 	for x in range(top_left.x, top_left.x + footprint.x):
 		for y in range(top_left.y, top_left.y + footprint.y):
 			_data.occupied_cells.erase(Vector2i(x, y))
@@ -193,14 +191,13 @@ func _all_cells_free(top_left: Vector2i, footprint: Vector2i, ignore_id: String 
 				return false
 	return true
 
-func _get_footprint(id_unique: String, rotated: bool) -> Vector2i:
+func get_footprint(id_unique: String, rotated: bool) -> Vector2i:
 	if not ITEM_INSTANCE_REGISTRY.has_instance(id_unique):
 		return Vector2i.ZERO
 	var instance: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(id_unique)
-	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(instance.definition_id)
+	var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(instance.id_def)
 	if definition == null:
 		return Vector2i.ZERO
 	if rotated:
 		return Vector2i(definition.grid_size.y, definition.grid_size.x)
 	return definition.grid_size
-

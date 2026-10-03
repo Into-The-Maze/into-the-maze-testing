@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="FoodItemDefinition" format=3 uid="uid://bgfga3vsw3024"]
+
+[ext_resource type="Texture2D" uid="uid://cay00grfn3ib7" path="res://assets/items_2d/mre.png" id="1_0gsa6"]
+[ext_resource type="Script" uid="uid://cvw06harr4qko" path="res://item/data/types/food_item_definition.gd" id="1_nqeyb"]
+
+[resource]
+script = ExtResource("1_nqeyb")
+id = &"mre"
+name = "MRE Ration Pack"
+description = "A military ration pack containing a full meal, albeit dry."
+item_2d = ExtResource("1_0gsa6")
+grid_size = Vector2i(1, 2)
+metadata/_custom_type_script = "uid://cvw06harr4qko"
