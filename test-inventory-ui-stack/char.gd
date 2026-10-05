@@ -1,9 +1,7 @@
 extends CharacterBody3D
 
-
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
-
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -27,10 +25,17 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
+func _ready() -> void:
+	var inv = $Inventory
+	var bandage = ITEM_INSTANCE_REGISTRY.create_instance(&"bandage")
+	inv.auto_insert_item(bandage.id_unique)
+	var mre = ITEM_INSTANCE_REGISTRY.create_instance(&"mre")
+	inv.auto_insert_item(mre.id_unique)
+	var medkit = ITEM_INSTANCE_REGISTRY.create_instance(&"medkit")
+	inv.auto_insert_item(medkit.id_unique)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Open Inventory"):
 		var panel = UI_MANAGER.open_panel(&"player_inventory")
 		if !panel: return
 		panel.content.inventory = $Inventory
-		UI_MANAGER.test(panel.content.inventory)

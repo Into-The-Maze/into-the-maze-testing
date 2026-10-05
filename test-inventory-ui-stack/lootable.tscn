@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://cth7npam6r1fy"]
+
+[ext_resource type="Script" uid="uid://tyjtyfcvbn22" path="res://inventory/data/inventory.gd" id="1_crffx"]
+[ext_resource type="Script" uid="uid://u046fkpcjfk0" path="res://lootable.gd" id="1_fo8je"]
+[ext_resource type="Script" uid="uid://ca653x88h87vx" path="res://inventory/data/inventory_data.gd" id="2_fo8je"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_umdtr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+albedo_color = Color(0.45, 0.24599998, 0.08999999, 1)
+
+[sub_resource type="Resource" id="Resource_umdtr"]
+script = ExtResource("2_fo8je")
+grid_size = Vector2i(3, 3)
+metadata/_custom_type_script = "uid://ca653x88h87vx"
+
+[node name="Lootable" type="Node3D" unique_id=501737140]
+script = ExtResource("1_fo8je")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1768023531]
+mesh = SubResource("BoxMesh_umdtr")
+surface_material_override/0 = SubResource("StandardMaterial3D_036b0")
+
+[node name="Inventory" type="Node" parent="." unique_id=689687686]
+script = ExtResource("1_crffx")
+_data = SubResource("Resource_umdtr")
+metadata/_custom_type_script = "uid://tyjtyfcvbn22"

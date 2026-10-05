@@ -3,6 +3,12 @@ extends Node
 @export var panel_def: Dictionary[StringName, PanelDefinition]
 var open_panels: Dictionary[StringName, Node] = {}
 
+signal UI_CONTAINER_SELECTED (key: StringName)
+
+func _ready() -> void:
+	UI_CONTAINER_SELECTED.connect(move_to_top)
+
+
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Rotate") and get_viewport().gui_is_dragging():
@@ -28,8 +34,13 @@ func open_panel(panel_id: StringName, key: StringName = panel_id) -> UIContainer
 		if open_panels.get(key) == panel:
 			open_panels.erase(key)
 	)
-	print(open_panels)
+	panel.key = key
 	return panel
+
+func move_to_top(key: StringName):
+	if !key: return
+	var panel = open_panels[key]
+	move_child(panel, -1)
 
 ### Inventory ###
 signal drag_rotated_changed(rotated: bool)
@@ -58,10 +69,3 @@ func try_move(from_inv: Inventory, to_inv: Inventory, id_unique: String, top_lef
 			from_inv.place_item(id_unique, origin.top_left, origin.rotated)
 			return result == Inventory.PlacementResult.MERGE_PART
 
-func test(inv: Inventory):
-	var bandage = ITEM_INSTANCE_REGISTRY.create_instance(&"bandage")
-	inv.auto_insert_item(bandage.id_unique)
-	var mre = ITEM_INSTANCE_REGISTRY.create_instance(&"mre")
-	inv.auto_insert_item(mre.id_unique)
-	var medkit = ITEM_INSTANCE_REGISTRY.create_instance(&"medkit")
-	inv.auto_insert_item(medkit.id_unique)
