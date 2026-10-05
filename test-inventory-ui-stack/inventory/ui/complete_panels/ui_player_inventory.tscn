@@ -26,6 +26,8 @@ text = "X"
 
 [node name="InventoryView" parent="V" unique_id=1601652082 instance=ExtResource("2_xt1sh")]
 layout_mode = 2
+mouse_filter = 1
 
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="gui_input" from="V/H/Bar" to="." method="_on_bar_gui_input"]
 [connection signal="button_down" from="V/H/Close" to="." method="_on_close_button_down"]

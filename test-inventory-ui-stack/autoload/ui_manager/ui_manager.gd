@@ -8,8 +8,6 @@ signal UI_CONTAINER_SELECTED (key: StringName)
 func _ready() -> void:
 	UI_CONTAINER_SELECTED.connect(move_to_top)
 
-
-
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Rotate") and get_viewport().gui_is_dragging():
 		drag_rotated = not drag_rotated

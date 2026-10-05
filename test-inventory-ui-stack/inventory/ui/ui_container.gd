@@ -30,3 +30,12 @@ func _on_bar_gui_input(event: InputEvent) -> void:
 		drag = false
 		selected = false
 
+func _on_gui_input(event: InputEvent) -> void:
+	if event is not InputEventMouseButton: return
+	if event.button_index != MOUSE_BUTTON_LEFT: return
+	if event.is_pressed():
+		if !selected:
+			UI_MANAGER.UI_CONTAINER_SELECTED.emit(key)
+			selected = true
+	else:
+		selected = false

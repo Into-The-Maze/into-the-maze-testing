@@ -16,7 +16,6 @@ var inventory: Inventory = null:
 # String id_unique -> ItemContainer icon
 var _icons: Dictionary = {}
 
-
 func _ready() -> void:
 	UI_MANAGER.drag_rotated_changed.connect(_on_drag_rotated_changed)
 
@@ -72,6 +71,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	_drag_preview = preview
 
 	var wrapper := Control.new()
+	wrapper.z_index += 1
 	wrapper.add_child(preview)
 	set_drag_preview(wrapper)
 
