@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://dd4cr3s5vg8e0" path="res://autoload/ui_manager/ui_manager.gd" id="1_lvh12"]
 [ext_resource type="Script" uid="uid://ddx7bpeolnfiq" path="res://autoload/ui_manager/panel_definition.gd" id="2_23p0h"]
-[ext_resource type="Resource" uid="uid://ce3jov6mnssqo" path="res://autoload/ui_manager/panels/player_inventory.tres" id="3_st4bj"]
+[ext_resource type="Resource" uid="uid://fonqt0uyp7n7" path="res://autoload/ui_manager/panels/ui_player_inventory.tres" id="3_23p0h"]
 
 [node name="UIMANAGER" type="Node" unique_id=2077357943]
 script = ExtResource("1_lvh12")
 panel_def = Dictionary[StringName, ExtResource("2_23p0h")]({
-&"player_inventory": ExtResource("3_st4bj")
+&"player_inventory": ExtResource("3_23p0h")
 })

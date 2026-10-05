@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="PanelDefinition" format=3 uid="uid://ce3jov6mnssqo"]
-
-[ext_resource type="Script" uid="uid://ddx7bpeolnfiq" path="res://autoload/ui_manager/panel_definition.gd" id="1_7ywy0"]
-[ext_resource type="PackedScene" uid="uid://dcgbyl2bgkdpj" path="res://inventory/ui/inventory_grid.tscn" id="1_xbi1f"]
-
-[resource]
-script = ExtResource("1_7ywy0")
-scene = ExtResource("1_xbi1f")
-metadata/_custom_type_script = "uid://ddx7bpeolnfiq"

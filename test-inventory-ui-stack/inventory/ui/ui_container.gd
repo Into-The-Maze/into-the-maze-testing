@@ -1,7 +1,12 @@
 extends PanelContainer
+class_name UIContainer
 
 var drag := false
 var delta := Vector2.ZERO
+
+var content:
+	get:
+		return $V.get_child(-1)
 
 func _process(_delta: float) -> void:
 	if drag:
@@ -17,3 +22,4 @@ func _on_bar_gui_input(event: InputEvent) -> void:
 		drag = true
 		delta = get_global_mouse_position() - global_position
 	else: drag = false
+

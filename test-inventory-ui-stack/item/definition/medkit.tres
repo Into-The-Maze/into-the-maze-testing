@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MedicalItemDefinition" format=3 uid="uid://ki13b6us1pvj"]
+
+[ext_resource type="Script" uid="uid://begxw0idsaxu4" path="res://item/data/types/medical_item_definition.gd" id="1_bdjja"]
+[ext_resource type="Texture2D" uid="uid://bamwfnils0bd7" path="res://assets/items_2d/medkit.png" id="1_y8ydd"]
+
+[resource]
+script = ExtResource("1_bdjja")
+id = &"medkit"
+name = "Medkit"
+description = "Heals you."
+item_2d = ExtResource("1_y8ydd")
+grid_size = Vector2i(2, 2)
+metadata/_custom_type_script = "uid://begxw0idsaxu4"

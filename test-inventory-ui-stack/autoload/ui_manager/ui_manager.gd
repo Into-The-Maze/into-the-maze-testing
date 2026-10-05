@@ -8,7 +8,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Rotate") and get_viewport().gui_is_dragging():
 		drag_rotated = not drag_rotated
 
-func open_panel(panel_id: StringName, key: StringName = panel_id) -> Node:
+func open_panel(panel_id: StringName, key: StringName = panel_id) -> UIContainer:
 	var def := panel_def[panel_id]
 
 	if open_panels.has(key):
@@ -63,3 +63,5 @@ func test(inv: Inventory):
 	inv.auto_insert_item(bandage.id_unique)
 	var mre = ITEM_INSTANCE_REGISTRY.create_instance(&"mre")
 	inv.auto_insert_item(mre.id_unique)
+	var medkit = ITEM_INSTANCE_REGISTRY.create_instance(&"medkit")
+	inv.auto_insert_item(medkit.id_unique)
