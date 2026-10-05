@@ -2,6 +2,7 @@ extends NinePatchRect
 
 const CELL_SIZE := 32
 const ITEM_CONTAINER := preload("res://inventory/ui/item_container.tscn")
+var _drag_preview: ItemContainer = null
 
 var inventory: Inventory = null:
 	set(value):
@@ -14,6 +15,10 @@ var inventory: Inventory = null:
 
 # String id_unique -> ItemContainer icon
 var _icons: Dictionary = {}
+
+
+func _ready() -> void:
+	UI_MANAGER.drag_rotated_changed.connect(_on_drag_rotated_changed)
 
 ### Item Handling ###
 func _on_item_placed(id_unique: String, top_left: Vector2i, rotated: bool) -> void:
@@ -31,7 +36,7 @@ func _on_item_removed(id_unique: String) -> void:
 func _on_item_merged(target_id: String, _new_quantity: int) -> void:
 	var icon: ItemContainer = _icons.get(target_id, null)
 	if icon == null: return
-	icon.update(target_id)
+	icon.update(target_id, inventory.get_placement(target_id).rotated)
 
 func _rebuild_all_icons() -> void:
 	_clear_all_icons()
@@ -52,7 +57,7 @@ func _spawn_item_container(id_unique: String, entry: InventoryEntry) -> void:
 		_icons[id_unique] = icon
 		add_child(icon)
 	icon.position = Vector2(entry.top_left) * CELL_SIZE
-	icon.update(id_unique)
+	icon.update(id_unique, entry.rotated)
 
 ### Input ###
 func _get_drag_data(at_position: Vector2) -> Variant:
@@ -60,16 +65,17 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	var id := inventory.get_item_at(cell)
 	if id == "": return null
 
+	UI_MANAGER.drag_rotated = inventory.get_placement(id).rotated
+
 	var preview: ItemContainer = ITEM_CONTAINER.instantiate()
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_drag_preview = preview
 
-	# Wrapper so the item is centred on the cursor instead of hanging off its corner
 	var wrapper := Control.new()
 	wrapper.add_child(preview)
 	set_drag_preview(wrapper)
 
-	preview.update(id)
-	preview.position = -preview.size / 2.0
+	_refresh_preview(id, UI_MANAGER.drag_rotated)
 
 	return {"id": id, "from": inventory, "origin": cell}
 
@@ -83,6 +89,17 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 func _drop_cell(at_position: Vector2, id_unique: String) -> Vector2i:
 	var footprint := inventory.get_footprint(id_unique, UI_MANAGER.drag_rotated)
 	return Vector2i((at_position / CELL_SIZE - Vector2(footprint) / 2.0).round())
+
+func _on_drag_rotated_changed(rotated: bool) -> void:
+	if not is_instance_valid(_drag_preview): return
+	_refresh_preview(_drag_preview.current_id, rotated)
+
+func _refresh_preview(id: String, rotated: bool) -> void:
+	_drag_preview.update(id, rotated)
+	var target := Vector2(inventory.get_footprint(id, rotated)) * CELL_SIZE
+	_drag_preview.custom_minimum_size = target
+	_drag_preview.size = target
+	_drag_preview.position = -target / 2.0
 
 ### Internal ###
 func _bind():

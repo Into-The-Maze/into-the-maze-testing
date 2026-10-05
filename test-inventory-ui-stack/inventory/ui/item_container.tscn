@@ -7,11 +7,7 @@ custom_minimum_size = Vector2(32, 32)
 mouse_filter = 2
 script = ExtResource("1_i460y")
 
-[node name="C" type="CenterContainer" parent="." unique_id=1071091988]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="ItemTexture" type="TextureRect" parent="C" unique_id=909997480]
+[node name="ItemTexture" type="TextureRect" parent="." unique_id=909997480]
 texture_filter = 1
 layout_mode = 2
 mouse_filter = 2

@@ -30,5 +30,7 @@ func _physics_process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Open Inventory"):
-		print("inv open")
-		UI_MANAGER.spawn_inventory($Inventory)
+		var grid:  = UI_MANAGER.open_panel(&"player_inventory")
+		if !grid: return
+		grid.inventory = $Inventory
+		UI_MANAGER.test(grid.inventory)

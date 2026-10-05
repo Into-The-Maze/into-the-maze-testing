@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://dqq6tq112gaka"]
-
-[ext_resource type="Script" uid="uid://dd4cr3s5vg8e0" path="res://autoload/ui_manager.gd" id="1_lvh12"]
-
-[node name="UIMANAGER" type="Node" unique_id=2077357943]
-script = ExtResource("1_lvh12")
