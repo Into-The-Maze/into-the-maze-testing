@@ -25,7 +25,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-func _ready() -> void:
+func _ready() -> void: # Test items populate inventory
 	var inv = $Inventory
 	var bandage = ITEM_INSTANCE_REGISTRY.create_instance(&"bandage")
 	inv.auto_insert_item(bandage.id_unique)
@@ -33,6 +33,11 @@ func _ready() -> void:
 	inv.auto_insert_item(mre.id_unique)
 	var medkit = ITEM_INSTANCE_REGISTRY.create_instance(&"medkit")
 	inv.auto_insert_item(medkit.id_unique)
+
+	var stick = ITEM_INSTANCE_REGISTRY.create_instance(&"stick", 8)
+	inv.place_item(stick.id_unique, Vector2i(4, 4))
+	var stick2 = ITEM_INSTANCE_REGISTRY.create_instance(&"stick", 7)
+	inv.place_item(stick2.id_unique, Vector2i(3, 4))
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Open Inventory"):

@@ -12,7 +12,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("Rotate") and get_viewport().gui_is_dragging():
 		drag_rotated = not drag_rotated
 
-func open_panel(panel_id: StringName, key: StringName = panel_id) -> UIContainer:
+func open_panel(panel_id: StringName, key: StringName = panel_id) -> Control:
 	var def := panel_def[panel_id]
 
 	if open_panels.has(key):
@@ -32,7 +32,8 @@ func open_panel(panel_id: StringName, key: StringName = panel_id) -> UIContainer
 		if open_panels.get(key) == panel:
 			open_panels.erase(key)
 	)
-	panel.key = key
+	if "key" in panel:
+		panel.key = key
 	return panel
 
 func move_to_top(key: StringName):
@@ -67,3 +68,29 @@ func try_move(from_inv: Inventory, to_inv: Inventory, id_unique: String, top_lef
 			from_inv.place_item(id_unique, origin.top_left, origin.rotated)
 			return result == Inventory.PlacementResult.MERGE_PART
 
+func begin_split(from_inv: Inventory, to_inv: Inventory, id_unique: String, top_left: Vector2i, rotated: bool) -> void:
+	var limit = to_inv.get_split_limit(id_unique, top_left, rotated)
+	if limit < 1:
+		return
+
+	var dialog: UISplitStack = open_panel(&"ui_split_stack")
+	dialog.prepare(limit, get_viewport().get_mouse_position())
+	dialog.confirmed.connect(_finish_split.bind(from_inv, to_inv, id_unique, top_left, rotated))
+
+func _finish_split(amount: int, from_inv: Inventory, to_inv: Inventory, id_unique: String, top_left: Vector2i, rotated: bool) -> void:
+	if from_inv.get_placement(id_unique) == null:
+		return
+	if amount > to_inv.get_split_limit(id_unique, top_left, rotated):
+		return
+
+	var split_id := from_inv.split_stack(id_unique, amount)
+	if split_id == "":
+		return
+
+	var result := to_inv.place_item(split_id, top_left, rotated)
+	match result:
+		Inventory.PlacementResult.PLACED, Inventory.PlacementResult.MERGE_FULL:
+			return
+		_:
+			if not from_inv.auto_insert_item(split_id):
+				push_warning("Split leftover %s could not be returned to origin" % split_id)

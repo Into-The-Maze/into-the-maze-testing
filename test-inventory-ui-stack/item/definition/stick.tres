@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="JunkItemDefinition" format=3 uid="uid://ck2n5fsolspua"]
+
+[ext_resource type="Script" uid="uid://br8s6tsnqjl3m" path="res://item/data/types/junk_item_definition.gd" id="1_1wrwi"]
+[ext_resource type="Texture2D" uid="uid://cym7uxee6khp4" path="res://assets/items_2d/stick.png" id="1_pte1x"]
+
+[resource]
+script = ExtResource("1_1wrwi")
+id = &"stick"
+name = "Wood Scrap"
+description = "Scrap dry wood. Could be used for crafting."
+item_2d = ExtResource("1_pte1x")
+max_stack_size = 10
+is_stackable = true
+metadata/_custom_type_script = "uid://br8s6tsnqjl3m"

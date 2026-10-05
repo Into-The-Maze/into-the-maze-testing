@@ -4,6 +4,7 @@ class_name Inventory
 signal item_placed (id_unique: String, top_left: Vector2i, rotated: bool)
 signal item_removed (id_unique: String)
 signal item_merged (target_id: String, new_quantity: int)
+signal stack_changed(id_unique: String)
 
 enum PlacementResult { PLACED, MERGE_FULL, MERGE_PART, BLOCKED }
 enum _Drop { FREE, MERGE, BLOCKED }
@@ -96,8 +97,33 @@ func auto_insert_item(id_unique: String, rotated: bool = false) -> bool:
 	_write_placement(id_unique, pos, rotated)
 	return true
 
+func split_stack(id_unique: String, quantity: int) -> String:
+	var item: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(id_unique)
+	if item == null or quantity < 1 or quantity >= item.quantity:
+		return ""
+	item.quantity -= quantity
+	var split: ItemInstance = ITEM_INSTANCE_REGISTRY.create_instance(item.id_def, quantity)
+	stack_changed.emit(id_unique)
+	return split.id_unique
+
+func get_split_limit(source_id: String, top_left: Vector2i, rotated: bool = false) -> int:
+	var source: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(source_id)
+	if source == null:
+		return 0
+	var limit: int = source.quantity - 1
+	var drop := _classify_drop(source_id, top_left, rotated, false)
+	match drop.kind:
+		_Drop.FREE:
+			return limit
+		_Drop.MERGE:
+			var target: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(drop.target)
+			var definition: ItemDefinition = ITEM_DEFINITION_REGISTRY.get_definition(source.id_def)
+			return mini(limit, definition.max_stack_size - target.quantity)
+		_:
+			return 0
+
 ### Internal ###
-func _classify_drop(id_unique: String, top_left: Vector2i, rotated: bool) -> Dictionary:
+func _classify_drop(id_unique: String, top_left: Vector2i, rotated: bool, ignore_source: bool = true) -> Dictionary:
 	var blocked := { "kind": _Drop.BLOCKED, "target": "" }
 	var footprint := get_footprint(id_unique, rotated)
 
@@ -114,7 +140,7 @@ func _classify_drop(id_unique: String, top_left: Vector2i, rotated: bool) -> Dic
 	for x in range(top_left.x, top_left.x + footprint.x):
 		for y in range(top_left.y, top_left.y + footprint.y):
 			var here: String = _data.occupied_cells.get(Vector2i(x, y), "")
-			if here == "" or here == id_unique:
+			if here == "" or (ignore_source and here == id_unique):
 				continue
 			occupied_count += 1
 			if occupant == "":
@@ -124,7 +150,7 @@ func _classify_drop(id_unique: String, top_left: Vector2i, rotated: bool) -> Dic
 
 	if occupied_count == 0:
 		return { "kind": _Drop.FREE, "target": "" }
-	if occupied_count == footprint.x * footprint.y and _can_merge(id_unique, occupant):
+	if occupied_count == footprint.x * footprint.y and occupant != id_unique and _can_merge(id_unique, occupant):
 		return { "kind": _Drop.MERGE, "target": occupant }
 
 	return blocked

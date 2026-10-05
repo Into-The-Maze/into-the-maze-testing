@@ -37,6 +37,11 @@ func _on_item_merged(target_id: String, _new_quantity: int) -> void:
 	if icon == null: return
 	icon.update(target_id, inventory.get_placement(target_id).rotated)
 
+func _on_stack_changed(id_unique) -> void:
+	var icon: ItemContainer = _icons.get(id_unique, null)
+	if !icon: return
+	icon.update(id_unique, inventory.get_placement(id_unique).rotated)
+
 func _rebuild_all_icons() -> void:
 	_clear_all_icons()
 	if inventory == null:
@@ -64,10 +69,19 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	var id := inventory.get_item_at(cell)
 	if id == "": return null
 
-	UI_MANAGER.drag_rotated = inventory.get_placement(id).rotated
+	var entry := inventory.get_placement(id)
+	var instance: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(id)
+	if entry == null or instance == null: return null
+
+	# Shift is sampled once, here at drag start. Only stacks of 2+ can be split.
+	var split := Input.is_action_pressed("Split") and instance.quantity > 1
+
+	UI_MANAGER.drag_rotated = entry.rotated
 
 	var preview: ItemContainer = ITEM_CONTAINER.instantiate()
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if split:
+		preview.modulate = Color(1.0, 1.0, 1.0, 0.7) # visual cue that this drag is a split
 	_drag_preview = preview
 
 	var wrapper := Control.new()
@@ -77,14 +91,20 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 
 	_refresh_preview(id, UI_MANAGER.drag_rotated)
 
-	return {"id": id, "from": inventory, "origin": cell}
-
+	return {"id": id, "from": inventory, "origin": cell, "split": split}
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if not (data is Dictionary and data.has("id")): return false
-	return UI_MANAGER.can_move(inventory, data.id, _drop_cell(at_position, data.id), UI_MANAGER.drag_rotated)
+	var top_left := _drop_cell(at_position, data.id)
+	if data.get("split", false):
+		return inventory.get_split_limit(data.id, top_left, UI_MANAGER.drag_rotated) >= 1
+	return UI_MANAGER.can_move(inventory, data.id, top_left, UI_MANAGER.drag_rotated)
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
-	UI_MANAGER.try_move(data.from, inventory, data.id, _drop_cell(at_position, data.id), UI_MANAGER.drag_rotated)
+	var top_left := _drop_cell(at_position, data.id)
+	if data.get("split", false):
+		UI_MANAGER.begin_split(data.from, inventory, data.id, top_left, UI_MANAGER.drag_rotated)
+	else:
+		UI_MANAGER.try_move(data.from, inventory, data.id, top_left, UI_MANAGER.drag_rotated)
 
 func _drop_cell(at_position: Vector2, id_unique: String) -> Vector2i:
 	var footprint := inventory.get_footprint(id_unique, UI_MANAGER.drag_rotated)
@@ -107,6 +127,7 @@ func _bind():
 	inventory.item_placed.connect(_on_item_placed)
 	inventory.item_removed.connect(_on_item_removed)
 	inventory.item_merged.connect(_on_item_merged)
+	inventory.stack_changed.connect(_on_stack_changed)
 
 func _unbind():
 	if inventory == null: return
@@ -116,3 +137,5 @@ func _unbind():
 		inventory.item_removed.disconnect(_on_item_removed)
 	if inventory.item_merged.is_connected(_on_item_merged):
 		inventory.item_merged.disconnect(_on_item_merged)
+	if inventory.stack_changed.is_connected(_on_stack_changed):
+		inventory.stack_changed.disconnect(_on_stack_changed)

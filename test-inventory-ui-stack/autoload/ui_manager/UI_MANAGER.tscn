@@ -4,10 +4,12 @@
 [ext_resource type="Script" uid="uid://ddx7bpeolnfiq" path="res://autoload/ui_manager/panel_definition.gd" id="2_23p0h"]
 [ext_resource type="Resource" uid="uid://fonqt0uyp7n7" path="res://autoload/ui_manager/panels/ui_player_inventory.tres" id="3_23p0h"]
 [ext_resource type="Resource" uid="uid://dxpy22u44ru8r" path="res://autoload/ui_manager/panels/ui_lootable_inventory.tres" id="4_st4bj"]
+[ext_resource type="Resource" uid="uid://bg3uk75ax5r5d" path="res://autoload/ui_manager/panels/ui_split_stack.tres" id="5_anc66"]
 
 [node name="UIMANAGER" type="Node" unique_id=2077357943]
 script = ExtResource("1_lvh12")
 panel_def = Dictionary[StringName, ExtResource("2_23p0h")]({
 &"inventory": ExtResource("4_st4bj"),
-&"player_inventory": ExtResource("3_23p0h")
+&"player_inventory": ExtResource("3_23p0h"),
+&"ui_split_stack": ExtResource("5_anc66")
 })

@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://gkq4dm62sgcm"]
+
+[ext_resource type="Script" uid="uid://gggfb0vsth44" path="res://inventory/ui/ui_stack_split.gd" id="1_r4tav"]
+
+[node name="UiStackSplit" type="Control" unique_id=546713799]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r4tav")
+
+[node name="Dialogue" type="PanelContainer" parent="." unique_id=894308898]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 80)
+layout_mode = 0
+offset_right = 87.0
+offset_bottom = 86.0
+
+[node name="V" type="VBoxContainer" parent="Dialogue" unique_id=557607599]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Titlebar" type="PanelContainer" parent="Dialogue/V" unique_id=444538860]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Dialogue/V/Titlebar" unique_id=595594387]
+layout_mode = 2
+text = "Split Stack"
+horizontal_alignment = 1
+
+[node name="Controls" type="PanelContainer" parent="Dialogue/V" unique_id=2003893048]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="V" type="VBoxContainer" parent="Dialogue/V/Controls" unique_id=166291069]
+layout_mode = 2
+
+[node name="Spin" type="SpinBox" parent="Dialogue/V/Controls/V" unique_id=853523067]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="Slider" type="HSlider" parent="Dialogue/V/Controls/V" unique_id=32769449]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+
+[node name="H" type="HBoxContainer" parent="Dialogue/V/Controls/V" unique_id=699338823]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Cancel" type="Button" parent="Dialogue/V/Controls/V/H" unique_id=1694615167]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Confirm" type="Button" parent="Dialogue/V/Controls/V/H" unique_id=752845305]
+layout_mode = 2
+text = "Confirm"
+
+[connection signal="value_changed" from="Dialogue/V/Controls/V/Spin" to="." method="_on_spin_value_changed"]
+[connection signal="value_changed" from="Dialogue/V/Controls/V/Slider" to="." method="_on_slider_value_changed"]
+[connection signal="pressed" from="Dialogue/V/Controls/V/H/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="Dialogue/V/Controls/V/H/Confirm" to="." method="_on_confirm_pressed"]
