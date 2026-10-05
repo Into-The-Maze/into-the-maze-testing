@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://gkq4dm62sgcm"]
 
-[ext_resource type="Script" uid="uid://gggfb0vsth44" path="res://inventory/ui/ui_stack_split.gd" id="1_r4tav"]
+[ext_resource type="Script" uid="uid://gggfb0vsth44" path="res://inventory/ui/ui_stack_split.gd" id="1_mpjm8"]
 
 [node name="UiStackSplit" type="Control" unique_id=546713799]
 layout_mode = 3
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_r4tav")
+script = ExtResource("1_mpjm8")
 
 [node name="Dialogue" type="PanelContainer" parent="." unique_id=894308898]
 unique_name_in_owner = true
