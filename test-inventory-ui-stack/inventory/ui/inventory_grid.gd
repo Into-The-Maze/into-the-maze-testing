@@ -168,13 +168,13 @@ func _drag_highlight(pos: Vector2):
 	var tint := Color.GREEN if _can_drop(top_left, _drag_data) else Color.RED
 	_update_highlight(top_left, footprint, tint, 1)
 
-func _update_highlight(top_left: Vector2i, footprint: Vector2i, tint: Color, z: int) -> void:
+func _update_highlight(top_left: Vector2i, footprint: Vector2i, color: Color, z: int) -> void:
 	var highlight_size := Vector2(footprint) * CELL_SIZE
 	highlight.custom_minimum_size = highlight_size
 	highlight.size = highlight_size
 	highlight.position = Vector2(top_left) * CELL_SIZE
 	highlight.z_index = z
-	highlight.self_modulate = tint
+	highlight.self_modulate = color
 	highlight.visible = true
 
 ### Internal ###
