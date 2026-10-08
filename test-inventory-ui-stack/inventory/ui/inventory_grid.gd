@@ -3,6 +3,7 @@ extends NinePatchRect
 const CELL_SIZE := 32
 const ITEM_CONTAINER := preload("res://inventory/ui/item_container.tscn")
 var _drag_preview: ItemContainer = null
+@onready var highlight: NinePatchRect = $Highlight
 
 var inventory: Inventory = null:
 	set(value):
@@ -18,6 +19,10 @@ var _icons: Dictionary = {}
 
 func _ready() -> void:
 	UI_MANAGER.drag_rotated_changed.connect(_on_drag_rotated_changed)
+
+func _process(_delta: float) -> void:
+	var coordinate := _get_hovered_coords()
+	_handle_hover_highlight(inventory.get_item_at(coordinate))
 
 ### Item Handling ###
 func _on_item_placed(id_unique: String, top_left: Vector2i, rotated: bool) -> void:
@@ -73,7 +78,6 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	var instance: ItemInstance = ITEM_INSTANCE_REGISTRY.get_instance(id)
 	if entry == null or instance == null: return null
 
-	# Shift is sampled once, here at drag start. Only stacks of 2+ can be split.
 	var split := Input.is_action_pressed("Split") and instance.quantity > 1
 
 	UI_MANAGER.drag_rotated = entry.rotated
@@ -81,7 +85,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	var preview: ItemContainer = ITEM_CONTAINER.instantiate()
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if split:
-		preview.modulate = Color(1.0, 1.0, 1.0, 0.7) # visual cue that this drag is a split
+		preview.modulate = Color(1.0, 1.0, 1.0, 0.7)
 	_drag_preview = preview
 
 	var wrapper := Control.new()
@@ -92,6 +96,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	_refresh_preview(id, UI_MANAGER.drag_rotated)
 
 	return {"id": id, "from": inventory, "origin": cell, "split": split}
+
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if not (data is Dictionary and data.has("id")): return false
 	var top_left := _drop_cell(at_position, data.id)
@@ -121,6 +126,23 @@ func _refresh_preview(id: String, rotated: bool) -> void:
 	_drag_preview.size = target
 	_drag_preview.position = -target / 2.0
 
+### Highlight ###
+func _handle_hover_highlight(id_unique: String):
+	if _drag_preview: return # ie, is an item currently being dragged?
+
+	if id_unique != "":
+		var entry := inventory.get_placement(id_unique)
+		var footprint := inventory.get_footprint(id_unique, entry.rotated)
+		highlight.custom_minimum_size = footprint * CELL_SIZE
+		highlight.size = footprint * CELL_SIZE
+		highlight.position = entry.top_left * CELL_SIZE
+		highlight.visible = true
+	else:
+		highlight.visible = false
+
+func _handle_drag_highlight():
+	pass
+
 ### Internal ###
 func _bind():
 	if inventory == null: return
@@ -139,3 +161,8 @@ func _unbind():
 		inventory.item_merged.disconnect(_on_item_merged)
 	if inventory.stack_changed.is_connected(_on_stack_changed):
 		inventory.stack_changed.disconnect(_on_stack_changed)
+
+func _get_hovered_coords() -> Vector2i:
+	var mouse_pos := get_viewport().get_mouse_position()
+	var panel_pos := global_position
+	return Vector2i((mouse_pos - panel_pos) / CELL_SIZE)

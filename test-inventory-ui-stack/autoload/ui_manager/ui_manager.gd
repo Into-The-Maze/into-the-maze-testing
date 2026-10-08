@@ -94,3 +94,4 @@ func _finish_split(amount: int, from_inv: Inventory, to_inv: Inventory, id_uniqu
 		_:
 			if not from_inv.auto_insert_item(split_id):
 				push_warning("Split leftover %s could not be returned to origin" % split_id)
+
