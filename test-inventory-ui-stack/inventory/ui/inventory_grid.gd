@@ -107,8 +107,7 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 
 	var preview: ItemContainer = ITEM_CONTAINER.instantiate()
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if split:
-		preview.modulate = Color(1.0, 1.0, 1.0, 0.7)
+	preview.modulate.a = 0.65
 	_drag_preview = preview
 
 	var wrapper := Control.new()
