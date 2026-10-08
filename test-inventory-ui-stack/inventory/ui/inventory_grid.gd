@@ -3,6 +3,7 @@ extends NinePatchRect
 const CELL_SIZE := 32
 const ITEM_CONTAINER := preload("res://inventory/ui/item_container.tscn")
 var _drag_preview: ItemContainer = null
+var _drag_data: Dictionary = {}
 @onready var highlight: NinePatchRect = $Highlight
 
 var inventory: Inventory = null:
@@ -18,11 +19,33 @@ var inventory: Inventory = null:
 var _icons: Dictionary = {}
 
 func _ready() -> void:
+	clip_contents = true
 	UI_MANAGER.drag_rotated_changed.connect(_on_drag_rotated_changed)
 
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_DRAG_BEGIN:
+			var data = get_viewport().gui_get_drag_data()
+			if data is Dictionary and data.has("id"):
+				_drag_data = data
+		NOTIFICATION_DRAG_END:
+			_drag_data = {}
+			_drag_preview = null
+			highlight.visible = false
+
 func _process(_delta: float) -> void:
-	var coordinate := _get_hovered_coords()
-	_handle_hover_highlight(inventory.get_item_at(coordinate))
+	if !inventory: highlight.visible = false; return
+
+	var local_mouse_pos := get_local_mouse_position()
+	if !Rect2(Vector2.ZERO, size).has_point(local_mouse_pos):
+		highlight.visible = false
+		return
+
+	if _drag_data.is_empty():
+		_hover_highlight(local_mouse_pos)
+	else:
+		_drag_highlight(local_mouse_pos)
+
 
 ### Item Handling ###
 func _on_item_placed(id_unique: String, top_left: Vector2i, rotated: bool) -> void:
@@ -99,7 +122,9 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	if not (data is Dictionary and data.has("id")): return false
-	var top_left := _drop_cell(at_position, data.id)
+	return _can_drop(_drop_cell(at_position, data.id), data)
+
+func _can_drop(top_left: Vector2i, data: Dictionary) -> bool:
 	if data.get("split", false):
 		return inventory.get_split_limit(data.id, top_left, UI_MANAGER.drag_rotated) >= 1
 	return UI_MANAGER.can_move(inventory, data.id, top_left, UI_MANAGER.drag_rotated)
@@ -127,21 +152,30 @@ func _refresh_preview(id: String, rotated: bool) -> void:
 	_drag_preview.position = -target / 2.0
 
 ### Highlight ###
-func _handle_hover_highlight(id_unique: String):
-	if _drag_preview: return # ie, is an item currently being dragged?
-
-	if id_unique != "":
-		var entry := inventory.get_placement(id_unique)
-		var footprint := inventory.get_footprint(id_unique, entry.rotated)
-		highlight.custom_minimum_size = footprint * CELL_SIZE
-		highlight.size = footprint * CELL_SIZE
-		highlight.position = entry.top_left * CELL_SIZE
-		highlight.visible = true
-	else:
+func _hover_highlight(pos: Vector2):
+	var cell := Vector2i((pos / CELL_SIZE).floor())
+	var id := inventory.get_item_at(cell)
+	if id == "":
 		highlight.visible = false
+		return
+	var entry := inventory.get_placement(id)
+	_update_highlight(entry.top_left, inventory.get_footprint(id, entry.rotated), Color.WHITE, 2)
 
-func _handle_drag_highlight():
-	pass
+func _drag_highlight(pos: Vector2):
+	var id: String = _drag_data.id
+	var top_left := _drop_cell(pos, id)
+	var footprint := inventory.get_footprint(id, UI_MANAGER.drag_rotated)
+	var tint := Color.GREEN if _can_drop(top_left, _drag_data) else Color.RED
+	_update_highlight(top_left, footprint, tint, 1)
+
+func _update_highlight(top_left: Vector2i, footprint: Vector2i, tint: Color, z: int) -> void:
+	var highlight_size := Vector2(footprint) * CELL_SIZE
+	highlight.custom_minimum_size = highlight_size
+	highlight.size = highlight_size
+	highlight.position = Vector2(top_left) * CELL_SIZE
+	highlight.z_index = z
+	highlight.self_modulate = tint
+	highlight.visible = true
 
 ### Internal ###
 func _bind():
