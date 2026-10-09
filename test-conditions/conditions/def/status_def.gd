@@ -16,3 +16,4 @@ enum Stacking {
 @export var stacking: Stacking = Stacking.REFRESH
 @export var max_stacks: int = 1
 @export var modifiers: Array[ModifierDef] = []
+@export var effects: Array[StatusEffect] = []

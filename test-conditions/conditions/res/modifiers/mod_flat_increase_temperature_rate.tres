@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ModifierDef" format=3 uid="uid://inmmjgocybx2"]
+
+[ext_resource type="Script" uid="uid://cw7kyxs52idub" path="res://conditions/def/modifier_def.gd" id="1_i3a24"]
+
+[resource]
+script = ExtResource("1_i3a24")
+key = &"temperature.rate"
+value = 5.0
+metadata/_custom_type_script = "uid://cw7kyxs52idub"

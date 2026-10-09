@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MeterDef" format=3 uid="uid://cyceugx23xwpd"]
+
+[ext_resource type="Script" uid="uid://b7qbwf4ygh41y" path="res://conditions/def/meter_def.gd" id="1_jbrip"]
+
+[resource]
+script = ExtResource("1_jbrip")
+id = &"stamina"
+name = "Stamina"
+base_rate = 3.0
+start_value = 25.0
+metadata/_custom_type_script = "uid://b7qbwf4ygh41y"

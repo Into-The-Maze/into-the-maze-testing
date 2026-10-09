@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ConditionsProfile" format=3 uid="uid://c4fsvlnrh8hqm"]
+
+[ext_resource type="Script" uid="uid://b7qbwf4ygh41y" path="res://conditions/def/meter_def.gd" id="1_7e06j"]
+[ext_resource type="Resource" uid="uid://cyceugx23xwpd" path="res://conditions/res/meters/meter_stamina.tres" id="2_g35pa"]
+[ext_resource type="Script" uid="uid://cw7kyxs52idub" path="res://conditions/def/modifier_def.gd" id="2_hh4p8"]
+[ext_resource type="Script" uid="uid://uv8psvoere0t" path="res://conditions/def/rule.gd" id="3_jkfuh"]
+[ext_resource type="Resource" uid="uid://cflaea7nxml3e" path="res://conditions/res/meters/meter_temperature.tres" id="3_xkuw1"]
+[ext_resource type="Script" uid="uid://dmw8ye4y4uqxt" path="res://conditions/def/conditions_profile.gd" id="4_g35pa"]
+[ext_resource type="Script" uid="uid://e0s44dwkko0x" path="res://conditions/def/status_def.gd" id="5_xkuw1"]
+[ext_resource type="Script" uid="uid://b7312874ipy44" path="res://conditions/def/stat_def.gd" id="6_swx7s"]
+[ext_resource type="Resource" uid="uid://b8wlyxxbevu20" path="res://conditions/res/statuses/status_wet.tres" id="8_swx7s"]
+
+[resource]
+script = ExtResource("4_g35pa")
+meters = Array[ExtResource("1_7e06j")]([ExtResource("2_g35pa"), ExtResource("3_xkuw1")])
+starting_statuses = Array[ExtResource("5_xkuw1")]([ExtResource("8_swx7s")])
+metadata/_custom_type_script = "uid://dmw8ye4y4uqxt"
