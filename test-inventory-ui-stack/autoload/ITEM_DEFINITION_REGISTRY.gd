@@ -1,6 +1,6 @@
 extends Node
 
-const DEFINITION_PATH = "res://item/definition"
+const DEFINITION_PATH = "res://resource/item_definition/"
 
 # StringName -> ItemDefinition
 var _definitions: Dictionary = {}

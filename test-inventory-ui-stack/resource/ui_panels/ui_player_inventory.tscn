@@ -1,10 +1,11 @@
-[gd_scene format=3 uid="uid://chjlgabvg8wey"]
+[gd_scene format=3 uid="uid://bb1agotrs6q6y"]
 
-[ext_resource type="Script" uid="uid://bmt38m44o0drq" path="res://inventory/ui/ui_container.gd" id="1_d3cny"]
+[ext_resource type="Script" uid="uid://bmt38m44o0drq" path="res://resource/ui_container.gd" id="1_bagvf"]
+[ext_resource type="PackedScene" uid="uid://dcgbyl2bgkdpj" path="res://inventory/ui/inventory_grid.tscn" id="2_pcrdw"]
 
 [node name="UiContainer" type="PanelContainer" unique_id=737268777]
 custom_minimum_size = Vector2(64, 64)
-script = ExtResource("1_d3cny")
+script = ExtResource("1_bagvf")
 
 [node name="V" type="VBoxContainer" parent="." unique_id=334356691]
 layout_mode = 2
@@ -23,9 +24,10 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 4
 text = "X"
 
-[node name="Content" type="PanelContainer" parent="V" unique_id=22842318]
+[node name="InventoryView" parent="V" unique_id=1601652082 instance=ExtResource("2_pcrdw")]
 layout_mode = 2
-size_flags_vertical = 3
+mouse_filter = 1
 
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="gui_input" from="V/H/Bar" to="." method="_on_bar_gui_input"]
 [connection signal="button_down" from="V/H/Close" to="." method="_on_close_button_down"]

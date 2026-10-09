@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="MedicalItemDefinition" format=3 uid="uid://sk8ecfme58tt"]
 
 [ext_resource type="Texture2D" uid="uid://b18dxoo6lxtf" path="res://assets/items_2d/bandage.png" id="1_ul207"]
-[ext_resource type="Script" uid="uid://begxw0idsaxu4" path="res://item/data/types/medical_item_definition.gd" id="1_wutkr"]
+[ext_resource type="Script" uid="uid://begxw0idsaxu4" path="res://resource/item_definition_types/medical_item_definition.gd" id="1_wutkr"]
 
 [resource]
 script = ExtResource("1_wutkr")
