@@ -16,4 +16,6 @@ enum Operation {
 @export var scale_curve: Curve
 
 func amount(conditions: Conditions) -> float:
-	return 0.0
+	if scale_curve and scale_key != &"":
+		return value * scale_curve.sample(conditions.get_value(scale_key))
+	return value

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ModifierDef" format=3 uid="uid://c0mr84r8a1ihg"]
+
+[ext_resource type="Script" uid="uid://cw7kyxs52idub" path="res://conditions/def/modifier_def.gd" id="1_biyyn"]
+
+[resource]
+script = ExtResource("1_biyyn")
+key = &"stamina.rate"
+value = -2.0
+metadata/_custom_type_script = "uid://cw7kyxs52idub"

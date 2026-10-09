@@ -26,9 +26,7 @@ func recalculate(modifiers: Array, conditions: Conditions) -> bool:
 			ModifierDef.Operation.PERCENT_ADD: percent_add += amount
 			ModifierDef.Operation.MULT: mult *= amount
 
-		var new_value := clampf((base + flat_add) * (1.0 + percent_add) * mult, min_value, max_value)
-		var changed := !is_equal_approx(value, new_value)
-		value = new_value
-		return changed
-
-	return true
+	var new_value := clampf((base + flat_add) * (1.0 + percent_add) * mult, min_value, max_value)
+	var changed := !is_equal_approx(value, new_value)
+	value = new_value
+	return changed

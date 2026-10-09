@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StatusDef" format=3 uid="uid://b8wlyxxbevu20"]
+
+[ext_resource type="Script" uid="uid://qy5uod86ci6o" path="res://conditions/def/status_effect.gd" id="1_3ne5v"]
+[ext_resource type="Script" uid="uid://cw7kyxs52idub" path="res://conditions/def/modifier_def.gd" id="2_er2ul"]
+[ext_resource type="Resource" uid="uid://sgenepyf6ub7" path="res://conditions/res/modifiers/mod_flat_reduce_temperature_rate.tres" id="3_eh0we"]
+[ext_resource type="Script" uid="uid://e0s44dwkko0x" path="res://conditions/def/status_def.gd" id="3_shdlp"]
+[ext_resource type="Resource" uid="uid://c0mr84r8a1ihg" path="res://conditions/res/modifiers/mod_flat_reduce_stamina_rate.tres" id="4_h0qtr"]
+[ext_resource type="Resource" uid="uid://dypnlfeqfaqe7" path="res://conditions/res/modifiers/mod_mult_increase_status_wet_decay.tres" id="5_eh0we"]
+
+[resource]
+script = ExtResource("3_shdlp")
+id = &"wet"
+name = "Wet"
+duration = 120.0
+modifiers = Array[ExtResource("2_er2ul")]([ExtResource("3_eh0we"), ExtResource("4_h0qtr"), ExtResource("5_eh0we")])
+metadata/_custom_type_script = "uid://e0s44dwkko0x"

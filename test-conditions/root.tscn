@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://bbomw82lno14r"]
+
+[ext_resource type="Script" uid="uid://bnw8gjijlp64g" path="res://stat_view.gd" id="1_28aoi"]
+[ext_resource type="Script" uid="uid://dm3kcrcuw0xiv" path="res://player.gd" id="1_jnlp7"]
+[ext_resource type="Script" uid="uid://c6f2v7dwaarjr" path="res://conditions/condition_emitter.gd" id="1_pq8q7"]
+[ext_resource type="Script" uid="uid://bhai5ig222ded" path="res://conditions/conditions.gd" id="1_vvh5c"]
+[ext_resource type="Resource" uid="uid://c4fsvlnrh8hqm" path="res://conditions/res/condition_profiles/wet_player.tres" id="2_28aoi"]
+[ext_resource type="Script" uid="uid://cw7kyxs52idub" path="res://conditions/def/modifier_def.gd" id="6_vyht1"]
+[ext_resource type="Resource" uid="uid://inmmjgocybx2" path="res://conditions/res/modifiers/mod_flat_increase_temperature_rate.tres" id="7_bf3um"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_umdtr"]
+albedo_color = Color(0, 0.21391276, 0.09183491, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_umdtr"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ioqbr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ioqbr"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_umdtr"]
+
+[sub_resource type="Environment" id="Environment_umdtr"]
+ambient_light_color = Color(1, 1, 1, 1)
+
+[node name="Root" type="Node3D" unique_id=2060864099]
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=1106592157]
+use_collision = true
+size = Vector3(100, 0.1, 100)
+material = SubResource("StandardMaterial3D_umdtr")
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1537023991]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+script = ExtResource("1_jnlp7")
+
+[node name="Mesh" type="MeshInstance3D" parent="Player" unique_id=1913685851]
+mesh = SubResource("CapsuleMesh_umdtr")
+
+[node name="Collider" type="CollisionShape3D" parent="Player" unique_id=2007413206]
+shape = SubResource("CapsuleShape3D_ioqbr")
+
+[node name="StatView" type="Label" parent="Player" unique_id=2061940419 node_paths=PackedStringArray("c")]
+offset_right = 40.0
+offset_bottom = 23.0
+script = ExtResource("1_28aoi")
+c = NodePath("../Conditions")
+
+[node name="Conditions" type="Node" parent="Player" unique_id=362909616]
+script = ExtResource("1_vvh5c")
+profile = ExtResource("2_28aoi")
+metadata/_custom_type_script = "uid://bhai5ig222ded"
+
+[node name="Camera3D" type="Camera3D" parent="Player" unique_id=885821475]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 20, 0)
+
+[node name="Bonfire" type="CSGBox3D" parent="." unique_id=418296545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5176723, 13.450732)
+material = SubResource("StandardMaterial3D_ioqbr")
+
+[node name="ConditionEmitter" type="Area3D" parent="Bonfire" unique_id=1192396324]
+script = ExtResource("1_pq8q7")
+modifiers = Array[ExtResource("6_vyht1")]([ExtResource("7_bf3um")])
+metadata/_custom_type_script = "uid://c6f2v7dwaarjr"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Bonfire/ConditionEmitter" unique_id=1585978838]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, 0)
+shape = SubResource("SphereShape3D_umdtr")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1710735465]
+environment = SubResource("Environment_umdtr")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1559285876]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 17.915363, 0)
+light_energy = 5.119

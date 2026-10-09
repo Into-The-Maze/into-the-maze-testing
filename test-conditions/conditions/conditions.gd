@@ -102,7 +102,6 @@ func _tick_stats() -> void:
 
 func _tick_statuses(delta: float):
 	for status_instance: StatusInstance in _statuses.duplicate():
-		status_instance.def._on_tick(self, status_instance, delta)
 		for e in status_instance.def.effects:
 			e.on_tick(self, status_instance, delta)
 

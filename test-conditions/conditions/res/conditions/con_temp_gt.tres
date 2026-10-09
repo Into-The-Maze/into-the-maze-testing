@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CompareCondition" format=3 uid="uid://dnfbxlechf0w"]
+
+[ext_resource type="Script" uid="uid://ciq30yj5t1ofy" path="res://conditions/def/conditions/compare_condition.gd" id="1_xn4lf"]
+
+[resource]
+script = ExtResource("1_xn4lf")
+key = &"temperature"
+threshold = 45.0
+metadata/_custom_type_script = "uid://ciq30yj5t1ofy"

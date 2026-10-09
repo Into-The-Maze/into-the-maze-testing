@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="MeterDef" format=3 uid="uid://cflaea7nxml3e"]
+
+[ext_resource type="Script" uid="uid://b7qbwf4ygh41y" path="res://conditions/def/meter_def.gd" id="1_4pwvo"]
+
+[resource]
+script = ExtResource("1_4pwvo")
+id = &"temperature"
+name = "Temperature"
+base_rate = 0.1
+start_value = 36.5
+metadata/_custom_type_script = "uid://b7qbwf4ygh41y"
