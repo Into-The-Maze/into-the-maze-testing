@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DebugLayer" format=3 uid="uid://deh8tx4uavoxn"]
+
+[ext_resource type="Script" uid="uid://b1fws0vv0l2wb" path="res://worldgen/data/room_definition.gd" id="1_eeptb"]
+[ext_resource type="Script" uid="uid://b3l5s6qu6nhhn" path="res://worldgen/data/debug_layer.gd" id="2_m7urc"]
+
+[resource]
+script = ExtResource("2_m7urc")
+width = 10
+height = 6
+depth = 3
+layer_number = -1
+metadata/_custom_type_script = "uid://b3l5s6qu6nhhn"

@@ -3,6 +3,7 @@ class_name RoomDefinition
 
 @export var scene: PackedScene
 @export var footprint: Vector3i = Vector3i(1, 1, 1)
+@export var entrances: Array[Vector2i]
 
 @export_group("Rarity Settings")
 @export var rarity: G.RARITY

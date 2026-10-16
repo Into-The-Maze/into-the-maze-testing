@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bxuqtwog5wllp"]
+
+[ext_resource type="Script" uid="uid://bjl137jjchrgb" path="res://worldgen/layer_builder.gd" id="1_ig7tw"]
+[ext_resource type="Resource" uid="uid://deh8tx4uavoxn" path="res://worldgen/res/debug_layer.tres" id="2_0xm2m"]
+
+[node name="Main" type="Node3D" unique_id=1530582879]
+
+[node name="LayerBuilder" type="Node" parent="." unique_id=443450791]
+script = ExtResource("1_ig7tw")
+layer = ExtResource("2_0xm2m")
+metadata/_custom_type_script = "uid://bjl137jjchrgb"
